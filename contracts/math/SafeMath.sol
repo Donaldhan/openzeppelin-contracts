@@ -12,6 +12,12 @@ pragma solidity ^0.6.0;
  *
  * Using this library instead of the unchecked operations eliminates an entire
  * class of bugs, so it's recommended to use it always.
+ * 包装solidity的算术操作，并添加数据溢出检查。
+ * 
+ * 包装solidity算术溢出的操作。像高级语言的标准行为一样，溢出会引起bug。
+ * SafeMath，可以做在溢出发生时，通过回滚交易，来规避这种情况。
+ *  
+ * 使用这个算术库，替代未检查的操作，可以避免全类的bug，强烈建议使用。
  */
 library SafeMath {
     /**

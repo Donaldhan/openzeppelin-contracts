@@ -9,9 +9,16 @@ pragma solidity ^0.6.0;
  * is concerned).
  *
  * This contract is only required for intermediate, library-like contracts.
+ * 
+ * Context提供当前执行上下文的交易发送者和相关数据。由于在处理实际应用中的GSN(Gas Station Network)交易时，
+ * 发送和执行的交易的不一定为实际的发送者，我们不应该通过msg.sender and msg.data直接访问相关数据。
+ * 我们可以通过Context去安全访问。
+ * 
+ * 此Context合约作为一个中介或代理合约库。
  */
 contract Context {
     // Empty internal constructor, to prevent people from mistakenly deploying
+    // 空内部构造，避免错误的部署
     // an instance of this contract, which should be used via inheritance.
     constructor () internal { }
 
