@@ -12,6 +12,7 @@ import "../math/SafeMath.sol";
  * Since it is not possible to overflow a 256 bit integer with increments of one, `increment` can skip the {SafeMath}
  * overflow check, thereby saving gas. This does assume however correct usage, in that the underlying `_value` is never
  * directly accessed.
+ * 计数器
  */
 library Counters {
     using SafeMath for uint256;

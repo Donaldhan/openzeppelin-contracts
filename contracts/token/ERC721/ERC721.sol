@@ -21,16 +21,16 @@ contract ERC721 is Context, ERC165, IERC721 {
     // which can be also obtained as `IERC721Receiver(0).onERC721Received.selector`
     bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 
-    // Mapping from token ID to owner
+    // Mapping from token ID to owner  token的拥有者信息<tokenId, 拥有者地址>
     mapping (uint256 => address) private _tokenOwner;
 
-    // Mapping from token ID to approved address
+    // Mapping from token ID to approved address token允许使用的账户信息<tokenId, 允许使用的账户信息>， 针对token的
     mapping (uint256 => address) private _tokenApprovals;
 
-    // Mapping from owner to number of owned token
+    // Mapping from owner to number of owned token 账户拥有的token数
     mapping (address => Counters.Counter) private _ownedTokensCount;
 
-    // Mapping from owner to operator approvals
+    // Mapping from owner to operator approvals  拥有者对应的许可用户<源目标账户，<操作许可账户，许可权>>，针对账户的
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     /*
@@ -56,6 +56,7 @@ contract ERC721 is Context, ERC165, IERC721 {
 
     /**
      * @dev Gets the balance of the specified address.
+     * 获取给定账号拥有的token数量
      * @param owner address to query the balance of
      * @return uint256 representing the amount owned by the passed address
      */
@@ -67,6 +68,7 @@ contract ERC721 is Context, ERC165, IERC721 {
 
     /**
      * @dev Gets the owner of the specified token ID.
+     * 获取token的拥有者
      * @param tokenId uint256 ID of the token to query the owner of
      * @return address currently marked as the owner of the given token ID
      */
@@ -82,6 +84,10 @@ contract ERC721 is Context, ERC165, IERC721 {
      * The zero address indicates there is no approved address.
      * There can only be one approved address per token at a given time.
      * Can only be called by the token owner or an approved operator.
+     * 允许给定的地址可以转移给定的token，0地址预示着，token不可转移。
+     * 在指定的时间范围之内，每个token只能允许一个账户使用。
+     * 只能是token的拥有者或者许可者使用调用
+     * 
      * @param to address to be approved for the given token ID
      * @param tokenId uint256 ID of the token to be approved
      */
@@ -99,6 +105,7 @@ contract ERC721 is Context, ERC165, IERC721 {
     /**
      * @dev Gets the approved address for a token ID, or zero if no address set
      * Reverts if the token ID does not exist.
+     * 获取token当前允许使用的账户地址
      * @param tokenId uint256 ID of the token to query the approval of
      * @return address currently approved for the given token ID
      */
@@ -111,6 +118,7 @@ contract ERC721 is Context, ERC165, IERC721 {
     /**
      * @dev Sets or unsets the approval of a given operator
      * An operator is allowed to transfer all tokens of the sender on their behalf.
+     * 设置操作者operator允许转移发送者的所有token
      * @param operator operator address to set the approval
      * @param approved representing the status of the approval to be set
      */
@@ -197,6 +205,7 @@ contract ERC721 is Context, ERC165, IERC721 {
 
     /**
      * @dev Returns whether the specified token exists.
+     * 判断给定的token是否存在
      * @param tokenId uint256 ID of the token to query the existence of
      * @return bool whether the token exists
      */
@@ -207,6 +216,7 @@ contract ERC721 is Context, ERC165, IERC721 {
 
     /**
      * @dev Returns whether the given spender can transfer a given token ID.
+     * 判断给定的账号是否可以转移给定的token
      * @param spender address of the spender to query
      * @param tokenId uint256 ID of the token to be transferred
      * @return bool whether the msg.sender is approved for the given token ID,
@@ -221,10 +231,13 @@ contract ERC721 is Context, ERC165, IERC721 {
     /**
      * @dev Internal function to safely mint a new token.
      * Reverts if the given token ID already exists.
+     * 安全挖的一个token，如果tokenid已经存在，则直接返回
      * If the target address is a contract, it must implement `onERC721Received`,
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
+     * 如果目标地址为合约，则必须实现onERC721Received，此方法在安全转移时调用，并返回一个魔法数；
+     * 否则交易回滚。
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
      */
@@ -241,7 +254,7 @@ contract ERC721 is Context, ERC165, IERC721 {
      * the transfer is reverted.
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
-     * @param _data bytes data to send along with a safe transfer check
+     * @param _data bytes data to send along with a safe transfer check 安全交易发送的数据
      */
     function _safeMint(address to, uint256 tokenId, bytes memory _data) internal virtual {
         _mint(to, tokenId);
@@ -251,6 +264,7 @@ contract ERC721 is Context, ERC165, IERC721 {
     /**
      * @dev Internal function to mint a new token.
      * Reverts if the given token ID already exists.
+     * 挖非同质化token，如果tokenid已经存在，则直接返回
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
      */
@@ -259,8 +273,9 @@ contract ERC721 is Context, ERC165, IERC721 {
         require(!_exists(tokenId), "ERC721: token already minted");
 
         _beforeTokenTransfer(address(0), to, tokenId);
-
+        //定义token的拥有者
         _tokenOwner[tokenId] = to;
+        //增加拥有者token数量
         _ownedTokensCount[to].increment();
 
         emit Transfer(address(0), to, tokenId);
@@ -272,14 +287,16 @@ contract ERC721 is Context, ERC165, IERC721 {
      * @param tokenId uint256 ID of the token being burned
      */
     function _burn(uint256 tokenId) internal virtual {
+        //获取token拥有者地址
         address owner = ownerOf(tokenId);
 
         _beforeTokenTransfer(owner, address(0), tokenId);
 
-        // Clear approvals
+        // Clear approvals， 清除
         _approve(address(0), tokenId);
-
+         //减少token拥有者的token拥有数
         _ownedTokensCount[owner].decrement();
+        //token的拥有者地址为0， 即直接销毁
         _tokenOwner[tokenId] = address(0);
 
         emit Transfer(owner, address(0), tokenId);
@@ -300,10 +317,10 @@ contract ERC721 is Context, ERC165, IERC721 {
 
         // Clear approvals
         _approve(address(0), tokenId);
-
+         //更新token转移双方的token数量
         _ownedTokensCount[from].decrement();
         _ownedTokensCount[to].increment();
-
+       //设置token的拥有者为to
         _tokenOwner[tokenId] = to;
 
         emit Transfer(from, to, tokenId);
@@ -350,6 +367,7 @@ contract ERC721 is Context, ERC165, IERC721 {
     }
 
     function _approve(address to, uint256 tokenId) private {
+        //赋予to用户token的使用权
         _tokenApprovals[tokenId] = to;
         emit Approval(ownerOf(tokenId), to, tokenId);
     }
@@ -362,8 +380,8 @@ contract ERC721 is Context, ERC165, IERC721 {
      *
      * - when `from` and `to` are both non-zero, `from`'s `tokenId` will be
      * transferred to `to`.
-     * - when `from` is zero, `tokenId` will be minted for `to`.
-     * - when `to` is zero, `from`'s `tokenId` will be burned.
+     * - when `from` is zero, `tokenId` will be minted for `to`.  from为0地址，to地址挖的token
+     * - when `to` is zero, `from`'s `tokenId` will be burned. to地址为0地址，from拥有的token将会将会被销毁
      * - `from` and `to` are never both zero.
      *
      * To learn more about hooks, head to xref:ROOT:using-hooks.adoc[Using Hooks].

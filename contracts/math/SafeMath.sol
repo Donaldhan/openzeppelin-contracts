@@ -23,7 +23,7 @@ library SafeMath {
     /**
      * @dev Returns the addition of two unsigned integers, reverting on
      * overflow.
-     *
+     * 
      * Counterpart to Solidity's `+` operator.
      *
      * Requirements:

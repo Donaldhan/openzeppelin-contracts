@@ -4,6 +4,7 @@ import "./ERC20.sol";
 
 /**
  * @dev Extension of {ERC20} that adds a cap to the supply of tokens.
+ * token供应量的扩容，扩容后的总量为cap， cap是不可变的。
  */
 contract ERC20Capped is ERC20 {
     uint256 private _cap;

@@ -8,6 +8,7 @@ pragma solidity ^0.6.0;
  * queried by others ({ERC165Checker}).
  *
  * For an implementation, see {ERC165}.
+ * 以标准的方法，检查智能合约是否支持给定的接口
  */
 interface IERC165 {
     /**

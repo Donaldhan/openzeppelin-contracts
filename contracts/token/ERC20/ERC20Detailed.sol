@@ -4,6 +4,7 @@ import "./IERC20.sol";
 
 /**
  * @dev Optional functions from the ERC20 standard.
+ * ERC20优化功能
  */
 abstract contract ERC20Detailed is IERC20 {
     string private _name;
@@ -22,7 +23,7 @@ abstract contract ERC20Detailed is IERC20 {
     }
 
     /**
-     * @dev Returns the name of the token.
+     * @dev Returns the name of the token. 代币名
      */
     function name() public view returns (string memory) {
         return _name;
@@ -30,7 +31,7 @@ abstract contract ERC20Detailed is IERC20 {
 
     /**
      * @dev Returns the symbol of the token, usually a shorter version of the
-     * name.
+     * name. 代币符号
      */
     function symbol() public view returns (string memory) {
         return _symbol;
@@ -47,6 +48,7 @@ abstract contract ERC20Detailed is IERC20 {
      * NOTE: This information is only used for _display_ purposes: it in
      * no way affects any of the arithmetic of the contract, including
      * {IERC20-balanceOf} and {IERC20-transfer}.
+     * 代币的展示精度。注意此接口只用于展示，不会对合约的算术运算有任何影响， 包括余额和转账
      */
     function decimals() public view returns (uint8) {
         return _decimals;

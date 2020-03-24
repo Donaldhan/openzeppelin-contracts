@@ -6,13 +6,13 @@ import "./IERC721Metadata.sol";
 import "../../introspection/ERC165.sol";
 
 contract ERC721Metadata is Context, ERC165, ERC721, IERC721Metadata {
-    // Token name
+    // Token name token名
     string private _name;
 
-    // Token symbol
+    // Token symbol token符号
     string private _symbol;
 
-    // Optional mapping for token URIs
+    // Optional mapping for token URIs token地址簿
     mapping(uint256 => string) private _tokenURIs;
 
     // Base URI
@@ -56,7 +56,7 @@ contract ERC721Metadata is Context, ERC165, ERC721, IERC721Metadata {
 
     /**
      * @dev Returns the URI for a given token ID. May return an empty string.
-     *
+     * 返回给定token对应的URI
      * If the token's URI is non-empty and a base URI was set (via
      * {_setBaseURI}), it will be added to the token ID's URI as a prefix.
      *
@@ -78,7 +78,7 @@ contract ERC721Metadata is Context, ERC165, ERC721, IERC721Metadata {
 
     /**
      * @dev Internal function to set the token URI for a given token.
-     *
+     * 设置token的URI
      * Reverts if the token ID does not exist.
      *
      * TIP: if all token IDs share a prefix (e.g. if your URIs look like
@@ -110,7 +110,7 @@ contract ERC721Metadata is Context, ERC165, ERC721, IERC721Metadata {
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override {
         super._beforeTokenTransfer(from, to, tokenId);
-
+        //如果to地址为0地址，则销毁对应的token
         if (to == address(0)) { // When burning tokens
             // Clear metadata (if any)
             if (bytes(_tokenURIs[tokenId]).length != 0) {

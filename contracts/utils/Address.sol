@@ -20,6 +20,12 @@ library Address {
      *  - an address where a contract will be created
      *  - an address where a contract lived, but was destroyed
      * ====
+     * 判断一个地址是否为合约地址；
+     * 以下情况会返回为false；
+     * 外部账号
+     * 构造器内的合约
+     * 合约创建的地址
+     * 被销毁的合约地址
      */
     function isContract(address account) internal view returns (bool) {
         // According to EIP-1052, 0x0 is the value returned for not-yet created accounts
@@ -35,7 +41,7 @@ library Address {
     /**
      * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
      * `recipient`, forwarding all available gas and reverting on errors.
-     *
+     * 替代转移操作，发送给定wei的ETH给接受者，转移所有可用的gas， 错误是回滚。
      * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
      * of certain opcodes, possibly making contracts go over the 2300 gas limit
      * imposed by `transfer`, making them unable to receive funds via

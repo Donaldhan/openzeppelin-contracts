@@ -7,6 +7,7 @@ import "./ERC20.sol";
  * @dev Extension of {ERC20} that allows token holders to destroy both their own
  * tokens and those that they have an allowance for, in a way that can be
  * recognized off-chain (via event analysis).
+ * ERC20Burnable为ERC20合约的拓展，运行token的拥有者可以销毁他们拥有的token和允许使用的token
  */
 contract ERC20Burnable is Context, ERC20 {
     /**
